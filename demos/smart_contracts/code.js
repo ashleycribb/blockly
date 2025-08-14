@@ -379,4 +379,31 @@ Code.discard = function() {
   }
 };
 
-window.addEventListener('load', Code.init);
+/**
+ * Initialize the template menu.
+ */
+Code.initTemplateMenu = function() {
+  var templateMenu = document.getElementById('templateMenu');
+  templateMenu.options.length = 0;
+  var option = new Option('Select a template', '');
+  option.disabled = true;
+  option.selected = true;
+  templateMenu.options.add(option);
+
+  for (var name in templates) {
+    templateMenu.options.add(new Option(name, name));
+  }
+  templateMenu.addEventListener('change', function() {
+    var name = templateMenu.value;
+    if (name) {
+      var xml = Blockly.utils.xml.textToDom(templates[name]);
+      Code.workspace.clear();
+      Blockly.Xml.domToWorkspace(xml, Code.workspace);
+    }
+  });
+};
+
+window.addEventListener('load', function() {
+  Code.init();
+  Code.initTemplateMenu();
+});

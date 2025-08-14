@@ -27,8 +27,23 @@ export function state_variable(block: Block, generator: SolidityGenerator): stri
 export function function_(block: Block, generator: SolidityGenerator): string {
   const name = block.getFieldValue('NAME');
   const body = generator.statementToCode(block, 'BODY');
-  // TODO: Add arguments and return type.
-  return `function ${name}() public {\n${body}}\n`;
+  const params = [];
+  for (let i = 1; i <= (block as any).parameterCount_; i++) {
+    const paramBlock = block.getInputTargetBlock('PARAM' + i);
+    if (paramBlock) {
+      const paramCode = generator.blockToCode(paramBlock);
+      if (paramCode) {
+        params.push(paramCode);
+      }
+    }
+  }
+  return `function ${name}(${params.join(', ')}) public {\n${body}}\n`;
+}
+
+export function function_parameter(block: Block, generator: SolidityGenerator): [string, Order] {
+  const type = block.getFieldValue('TYPE').toLowerCase();
+  const name = block.getFieldValue('NAME');
+  return [`${type} ${name}`, Order.ATOMIC];
 }
 
 export function constructor(block: Block, generator: SolidityGenerator): string {
