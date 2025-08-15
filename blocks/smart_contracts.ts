@@ -150,6 +150,62 @@ export const blocks = createBlockDefinitionsFromJsonArray([
     'tooltip': 'Returns a value from a function.',
     'helpUrl': '',
   },
+  // Block for a require statement.
+  {
+    'type': 'require',
+    'message0': 'require %1 %2',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'CONDITION',
+        'check': 'Boolean',
+      },
+      {
+        'type': 'input_value',
+        'name': 'MESSAGE',
+        'check': 'String',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'logic_blocks',
+    'tooltip': 'Requires a condition to be true.',
+    'helpUrl': '',
+  },
+  // Block for an assert statement.
+  {
+    'type': 'assert',
+    'message0': 'assert %1',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'CONDITION',
+        'check': 'Boolean',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'logic_blocks',
+    'tooltip': 'Asserts that a condition is true.',
+    'helpUrl': '',
+  },
+  // Block for a revert statement.
+  {
+    'type': 'revert',
+    'message0': 'revert %1',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'MESSAGE',
+        'check': 'String',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'logic_blocks',
+    'tooltip': 'Reverts the transaction.',
+    'helpUrl': '',
+  },
 ]);
 
 type FunctionBlock = Blockly.Block & {

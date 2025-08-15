@@ -55,3 +55,19 @@ export function return_(block: Block, generator: SolidityGenerator): string {
   const value = generator.valueToCode(block, 'VALUE', Order.NONE) || '';
   return `return ${value};\n`;
 }
+
+export function require(block: Block, generator: SolidityGenerator): string {
+  const condition = generator.valueToCode(block, 'CONDITION', Order.NONE) || 'false';
+  const message = generator.valueToCode(block, 'MESSAGE', Order.NONE) || '""';
+  return `require(${condition}, ${message});\n`;
+}
+
+export function assert(block: Block, generator: SolidityGenerator): string {
+  const condition = generator.valueToCode(block, 'CONDITION', Order.NONE) || 'false';
+  return `assert(${condition});\n`;
+}
+
+export function revert(block: Block, generator: SolidityGenerator): string {
+  const message = generator.valueToCode(block, 'MESSAGE', Order.NONE) || '""';
+  return `revert(${message});\n`;
+}

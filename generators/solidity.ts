@@ -28,6 +28,9 @@ const generators: {[key: string]: any} = {
   'constructor': smart_contracts_all.constructor,
   'return': smart_contracts_all.return_,
   'function_parameter': smart_contracts_all.function_parameter,
+  'require': smart_contracts_all.require,
+  'assert': smart_contracts_all.assert,
+  'revert': smart_contracts_all.revert,
 };
 
 for (const name in generators) {
