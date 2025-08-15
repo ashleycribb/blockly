@@ -253,7 +253,8 @@ Code.renderContent = function() {
     xmlTextarea.focus();
   } else if (content.id === 'content_solidity') {
     var code = solidity.solidityGenerator.workspaceToCode(Code.workspace);
-    content.textContent = code;
+    var pre = content.querySelector('pre');
+    pre.textContent = code;
     if (typeof PR === 'object') {
       PR.prettyPrint();
     }
@@ -317,6 +318,10 @@ Code.init = function() {
 
   Code.bindClick('trashButton',
       function() {Code.discard(); Code.renderContent();});
+  Code.bindClick('copyButton', function() {
+    var code = solidity.solidityGenerator.workspaceToCode(Code.workspace);
+    navigator.clipboard.writeText(code);
+  });
 
   for (var i = 0; i < Code.TABS_.length; i++) {
     var name = Code.TABS_[i];
