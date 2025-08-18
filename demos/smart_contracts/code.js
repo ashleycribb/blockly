@@ -9,6 +9,20 @@
  */
 'use strict';
 
+// TODO: Add your own Firebase credentials here.
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 /**
  * Create a namespace for the application.
  */
@@ -331,6 +345,28 @@ Code.init = function() {
   });
   Code.bindClick('deployButton', function() {
     alert('Deployment to testnet is coming soon!');
+  });
+  Code.bindClick('shareButton', function() {
+    var name = prompt('Enter a name for your template:');
+    if (name) {
+      var description = prompt('Enter a description:');
+      if (description) {
+        var xml = Blockly.Xml.workspaceToDom(Code.workspace);
+        var xmlText = Blockly.Xml.domToText(xml);
+        db.collection('templates').add({
+          name: name,
+          description: description,
+          xml: xmlText,
+        })
+        .then(function() {
+          alert('Template shared successfully!');
+        })
+        .catch(function(error) {
+          console.error('Error sharing template: ', error);
+          alert('Error sharing template. See console for details.');
+        });
+      }
+    }
   });
 
   for (var i = 0; i < Code.TABS_.length; i++) {
