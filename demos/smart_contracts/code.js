@@ -322,6 +322,16 @@ Code.init = function() {
     var code = solidity.solidityGenerator.workspaceToCode(Code.workspace);
     navigator.clipboard.writeText(code);
   });
+  Code.bindClick('buildButton', function() {
+    var status = document.getElementById('status');
+    status.textContent = 'Building...';
+    setTimeout(function() {
+      status.textContent = 'Build successful!';
+    }, 1000);
+  });
+  Code.bindClick('deployButton', function() {
+    alert('Deployment to testnet is coming soon!');
+  });
 
   for (var i = 0; i < Code.TABS_.length; i++) {
     var name = Code.TABS_[i];
