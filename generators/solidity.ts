@@ -31,6 +31,8 @@ const generators: {[key: string]: any} = {
   'require': smart_contracts_all.require,
   'assert': smart_contracts_all.assert,
   'revert': smart_contracts_all.revert,
+  'variables_get': smart_contracts_all.variables_get,
+  'variables_set': smart_contracts_all.variables_set,
 };
 
 for (const name in generators) {

@@ -14,6 +14,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/dist/web-llm.mjs"></script>
+  <script src="simulation.js"></script>
   <script src="code.js"></script>
 </head>
 <body>
@@ -23,7 +24,7 @@
       <select id="templateMenu"></select>
       <button id="openButton">Open</button>
       <button id="saveButton">Save</button>
-      <button id="buildButton">Build & Check</button>
+      <button id="simulateButton">Simulate</button>
       <button id="deployButton">Deploy</button>
       <button id="shareButton">Share</button>
     </div>
@@ -34,20 +35,28 @@
       <button id="copyButton">Copy</button>
       <pre class="prettyprint lang-sol"></pre>
     </div>
-    <div id="actors_panel">
-      <h3>Actors</h3>
-      <div class="actor">
-        <span class="name">Alice</span>
-        <span class="address">0x123...</span>
-        <span class="balance">100 ETH</span>
+    <div id="simulation_panel">
+      <div id="actors_panel">
+        <h3>Actors</h3>
+        <div class="actor">
+          <span class="name">Alice</span>
+          <span class="address">0x123...</span>
+          <span class="balance">100 ETH</span>
+          <button class="callButton" data-actor="Alice">Call Function</button>
+        </div>
+        <div class="actor">
+          <span class="name">Bob</span>
+          <span class="address">0x456...</span>
+          <span class="balance">50 ETH</span>
+          <button class="callButton" data-actor="Bob">Call Function</button>
+        </div>
       </div>
-      <div class="actor">
-        <span class="name">Bob</span>
-        <span class="address">0x456...</span>
-        <span class="balance">50 ETH</span>
+      <div id="contract_state_panel">
+        <h3>Contract State</h3>
+        <div id="contract_state"></div>
       </div>
       <div id="agent_panel">
-        <h3>AI Agent</h3>
+        <h3>AI Agent <span id="lightbulb">💡</span></h3>
         <div id="agent_messages"></div>
         <input type="text" id="agent_input" placeholder="Ask a question...">
       </div>

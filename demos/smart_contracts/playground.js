@@ -1,6 +1,7 @@
 'use strict';
 
 // TODO: Add your own Firebase credentials here.
+// You can get them from the Firebase console.
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_AUTH_DOMAIN",

@@ -10,6 +10,7 @@
 'use strict';
 
 // TODO: Add your own Firebase credentials here.
+// You can get them from the Firebase console.
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_AUTH_DOMAIN",
@@ -107,6 +108,29 @@ Code.loadBlocks = function(defaultXml) {
     // Restore saved blocks in a separate thread so that subsequent
     // initialization is not affected from a failed load.
     window.setTimeout(BlocklyStorage.restoreBlocks, 0);
+  }
+};
+
+/**
+ * Check for patterns in the workspace and suggest templates.
+ * @param {!Blockly.Events.Abstract} event The workspace event.
+ */
+Code.checkForTemplate = function(event) {
+  if (event.type == Blockly.Events.BLOCK_CREATE) {
+    var block = Code.workspace.getBlockById(event.blockId);
+    if (block.type == 'state_variable' &&
+        block.getFieldValue('TYPE') == 'MAPPING_ADDRESS_UINT') {
+      var lightbulb = document.getElementById('lightbulb');
+      lightbulb.style.display = 'inline';
+      lightbulb.onclick = function() {
+        if (confirm('It looks like you are creating a token. Would you like to start with a Basic Token template?')) {
+          var xml = Blockly.utils.xml.textToDom(templates['Basic Token']);
+          Code.workspace.clear();
+          Blockly.Xml.domToWorkspace(xml, Code.workspace);
+        }
+        lightbulb.style.display = 'none';
+      };
+    }
   }
 };
 
@@ -336,11 +360,11 @@ Code.init = function() {
     var code = solidity.solidityGenerator.workspaceToCode(Code.workspace);
     navigator.clipboard.writeText(code);
   });
-  Code.bindClick('buildButton', function() {
+  Code.bindClick('simulateButton', function() {
     var status = document.getElementById('status');
-    status.textContent = 'Building...';
+    status.textContent = 'Simulating...';
     setTimeout(function() {
-      status.textContent = 'Build successful!';
+      status.textContent = 'Simulation complete!';
     }, 1000);
   });
   Code.bindClick('deployButton', function() {
@@ -379,6 +403,56 @@ Code.init = function() {
 
   // Lazy-load the syntax-highlighting.
   window.setTimeout(Code.importPrettify, 1);
+
+  Code.workspace.addChangeListener(function(event) {
+    Code.updateContractState();
+    Code.checkForTemplate(event);
+  });
+
+  var callButtons = document.getElementsByClassName('callButton');
+  for (var i = 0; i < callButtons.length; i++) {
+    Code.bindClick(callButtons[i], function(e) {
+      var actor = e.target.dataset.actor;
+      var functionName = prompt(`Enter function name to call as ${actor}:`);
+      if (functionName) {
+        var params = prompt('Enter parameters, separated by commas:');
+        var sim = new Simulation(Code.workspace);
+        sim.run(functionName, params ? params.split(',') : []);
+      }
+    });
+  }
+};
+
+/**
+ * Animate a block on the workspace.
+ * @param {string} blockId The ID of the block to animate.
+ */
+Code.animateBlock = function(blockId) {
+  if (blockId) {
+    var block = Code.workspace.getBlockById(blockId);
+    if (block) {
+      Blockly.selected = block;
+      setTimeout(function() {
+        Blockly.selected = null;
+      }, 1000);
+    }
+  }
+};
+
+/**
+ * Update the contract state display.
+ */
+Code.updateContractState = function() {
+  var contractState = document.getElementById('contract_state');
+  contractState.innerHTML = '';
+  var blocks = Code.workspace.getBlocksByType('state_variable');
+  for (var i = 0; i < blocks.length; i++) {
+    var name = blocks[i].getFieldValue('NAME');
+    var type = blocks[i].getFieldValue('TYPE').toLowerCase();
+    var div = document.createElement('div');
+    div.innerHTML = `<b>${name}</b> (${type}): <span>0</span>`;
+    contractState.appendChild(div);
+  }
 };
 
 /**
