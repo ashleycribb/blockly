@@ -454,7 +454,33 @@ Code.initTemplateMenu = function() {
   });
 };
 
+/**
+ * Initialize the AI agent.
+ */
+Code.initAgent = async function() {
+  const agentMessages = document.getElementById('agent_messages');
+  const agentInput = document.getElementById('agent_input');
+  const chat = new webllm.ChatModule();
+
+  agentInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      const question = agentInput.value;
+      agentInput.value = '';
+      const userMessage = document.createElement('div');
+      userMessage.textContent = `You: ${question}`;
+      agentMessages.appendChild(userMessage);
+
+      const reply = await chat.generate(question);
+      const agentMessage = document.createElement('div');
+      agentMessage.textContent = `Agent: ${reply}`;
+      agentMessages.appendChild(agentMessage);
+      agentMessages.scrollTop = agentMessages.scrollHeight;
+    }
+  });
+};
+
 window.addEventListener('load', function() {
   Code.init();
   Code.initTemplateMenu();
+  Code.initAgent();
 });

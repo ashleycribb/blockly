@@ -13,6 +13,7 @@
   <script src="templates.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/dist/web-llm.mjs"></script>
   <script src="code.js"></script>
 </head>
 <body>
@@ -44,6 +45,11 @@
         <span class="name">Bob</span>
         <span class="address">0x456...</span>
         <span class="balance">50 ETH</span>
+      </div>
+      <div id="agent_panel">
+        <h3>AI Agent</h3>
+        <div id="agent_messages"></div>
+        <input type="text" id="agent_input" placeholder="Ask a question...">
       </div>
     </div>
     <div id="content_xml" class="content"></div>
