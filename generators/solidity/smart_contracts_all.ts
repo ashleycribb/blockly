@@ -73,12 +73,12 @@ export function revert(block: Block, generator: SolidityGenerator): string {
 }
 
 export function variables_get(block: Block, generator: SolidityGenerator): [string, Order] {
-  const varName = generator.nameDB_.getName(block.getFieldValue('VAR'), 'VARIABLE');
+  const varName = generator.nameDB_ ? generator.nameDB_.getName(block.getFieldValue('VAR'), 'VARIABLE') : '';
   return [varName, Order.ATOMIC];
 }
 
 export function variables_set(block: Block, generator: SolidityGenerator): string {
-  const varName = generator.nameDB_.getName(block.getFieldValue('VAR'), 'VARIABLE');
+  const varName = generator.nameDB_ ? generator.nameDB_.getName(block.getFieldValue('VAR'), 'VARIABLE') : '';
   const value = generator.valueToCode(block, 'VALUE', Order.ASSIGNMENT) || '0';
   return `${varName} = ${value};\n`;
 }

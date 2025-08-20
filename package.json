@@ -146,6 +146,7 @@
     "yargs": "^17.2.1"
   },
   "dependencies": {
+    "@solidity-parser/parser": "^0.20.2",
     "jsdom": "26.1.0"
   },
   "engines": {

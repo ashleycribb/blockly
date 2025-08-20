@@ -393,6 +393,20 @@ Code.init = function() {
     }
   });
 
+  Code.bindClick('importButton', function() {
+    var solidityCode = prompt('Paste your Solidity code here:');
+    if (solidityCode) {
+      var xmlText = decompile(solidityCode);
+      if (xmlText) {
+        var xml = Blockly.utils.xml.textToDom(xmlText);
+        Code.workspace.clear();
+        Blockly.Xml.domToWorkspace(xml, Code.workspace);
+      } else {
+        alert('Failed to decompile Solidity code.');
+      }
+    }
+  });
+
   for (var i = 0; i < Code.TABS_.length; i++) {
     var name = Code.TABS_[i];
     Code.bindClick('tab_' + name,
