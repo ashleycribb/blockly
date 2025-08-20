@@ -421,6 +421,7 @@ Code.init = function() {
   Code.workspace.addChangeListener(function(event) {
     Code.updateContractState();
     Code.checkForTemplate(event);
+    Linter.run(Code.workspace);
   });
 
   var callButtons = document.getElementsByClassName('callButton');
