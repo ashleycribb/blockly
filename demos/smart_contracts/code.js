@@ -9,20 +9,6 @@
  */
 'use strict';
 
-// TODO: Add your own Firebase credentials here.
-// You can get them from the Firebase console.
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
 /**
  * Create a namespace for the application.
@@ -345,14 +331,44 @@ Code.init = function() {
             wheel: true}
       });
 
-  Code.loadBlocks('');
-
-  if ('BlocklyStorage' in window) {
-    // Hook a save function onto unload.
-    BlocklyStorage.backupOnUnload(Code.workspace);
+  const projectId = Code.getStringParamFromUrl('project', '');
+  if (projectId) {
+    db.collection('projects').doc(projectId).get().then((doc) => {
+      if (doc.exists) {
+        const project = doc.data();
+        const xml = Blockly.utils.xml.textToDom(project.xml);
+        Blockly.Xml.domToWorkspace(xml, Code.workspace);
+      } else {
+        console.error('No such document!');
+      }
+    }).catch((error) => {
+      console.error('Error getting document:', error);
+    });
+  } else {
+    Code.loadBlocks('');
   }
 
   Code.tabClick(Code.selected);
+
+  Code.bindClick('saveButton', function() {
+    var name = prompt('Enter a name for your project:');
+    if (name) {
+      var xml = Blockly.Xml.workspaceToDom(Code.workspace);
+      var xmlText = Blockly.Xml.domToText(xml);
+      db.collection('projects').add({
+        name: name,
+        owner: auth.currentUser.uid,
+        xml: xmlText,
+      })
+      .then(function() {
+        alert('Project saved successfully!');
+      })
+      .catch(function(error) {
+        console.error('Error saving project: ', error);
+        alert('Error saving project. See console for details.');
+      });
+    }
+  });
 
   Code.bindClick('trashButton',
       function() {Code.discard(); Code.renderContent();});
@@ -604,8 +620,22 @@ Code.initSync = function() {
 };
 
 window.addEventListener('load', function() {
-  Code.init();
-  Code.initTemplateMenu();
-  Code.initAgent();
-  Code.initSync();
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      var userInfo = document.getElementById('user_info');
+      userInfo.textContent = user.email;
+      Code.init();
+      Code.initTemplateMenu();
+      Code.initAgent();
+      Code.initSync();
+    } else {
+      // No user is signed in.
+      window.location.href = 'login.html';
+    }
+  });
+
+  Code.bindClick('logoutButton', function() {
+    auth.signOut();
+  });
 });
