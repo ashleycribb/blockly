@@ -393,6 +393,13 @@ Code.init = function() {
     }
   });
 
+  Code.bindClick('sessionButton', function() {
+    var sessionId = Math.random().toString(36).substring(2, 15);
+    var newUrl = window.location.href.split('?')[0] + '?session=' + sessionId;
+    window.history.pushState({path:newUrl},'',newUrl);
+    alert('New session started! Share the URL to collaborate.');
+  });
+
   Code.bindClick('importButton', function() {
     var solidityCode = prompt('Paste your Solidity code here:');
     if (solidityCode) {
@@ -568,8 +575,37 @@ Code.initAgent = async function() {
   });
 };
 
+/**
+ * Initialize the synchronization logic.
+ */
+Code.initSync = function() {
+  var sessionId = Code.getStringParamFromUrl('session', '');
+  if (sessionId) {
+    var sessionRef = firebase.database().ref('sessions/' + sessionId);
+    sessionRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        var xml = Blockly.utils.xml.textToDom(data.xml);
+        Blockly.Xml.domToWorkspace(xml, Code.workspace);
+      }
+    });
+
+    Code.workspace.addChangeListener(function(event) {
+      if (event.type == Blockly.Events.BLOCK_MOVE ||
+          event.type == Blockly.Events.BLOCK_CHANGE ||
+          event.type == Blockly.Events.BLOCK_DELETE ||
+          event.type == Blockly.Events.BLOCK_CREATE) {
+        var xml = Blockly.Xml.workspaceToDom(Code.workspace);
+        var xmlText = Blockly.Xml.domToText(xml);
+        sessionRef.set({xml: xmlText});
+      }
+    });
+  }
+};
+
 window.addEventListener('load', function() {
   Code.init();
   Code.initTemplateMenu();
   Code.initAgent();
+  Code.initSync();
 });
