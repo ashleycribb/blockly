@@ -15,6 +15,7 @@ import * as procedures from './procedures.js';
 import * as texts from './text.js';
 import * as variables from './variables.js';
 import * as variablesDynamic from './variables_dynamic.js';
+import * as smart_contracts from './smart_contracts.js';
 
 export {
   lists,
@@ -25,6 +26,7 @@ export {
   texts,
   variables,
   variablesDynamic,
+  smart_contracts,
 };
 
 /**
@@ -41,4 +43,5 @@ export const blocks: {[key: string]: BlockDefinition} = Object.assign(
   texts.blocks,
   variables.blocks,
   variablesDynamic.blocks,
+  smart_contracts.blocks,
 );

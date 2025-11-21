@@ -154,6 +154,13 @@ const chunks = [
     scriptExport: 'dart',
     scriptNamedExports: {'Blockly.Dart': 'dartGenerator'},
   },
+  {
+    name: 'solidity',
+    files: ['generators/solidity.js', 'generators/solidity/**/*.js'],
+    entry: 'generators/solidity.js',
+    scriptExport: 'solidity',
+    scriptNamedExports: {'Blockly.Solidity': 'solidityGenerator'},
+  },
 ];
 
 chunks[0].parent = null;

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="header">
+    <h1><a href="index.html">Blockly</a> &gt; My Profile</h1>
+    <div id="toolbar">
+      <span id="user_info"></span>
+      <button id="logoutButton">Logout</button>
+    </div>
+  </div>
+  <div class="container">
+    <h2>My Projects</h2>
+    <div id="projects"></div>
+    <h2>My Shared Templates</h2>
+    <div id="templates"></div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

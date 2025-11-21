@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "demos/smart_contracts",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
